@@ -1,5 +1,7 @@
 # [Replayed](http://viagraphs.github.io/replayed/index.html)
 
+[![Build Status](https://travis-ci.org/viagraphs/replayed.svg)](https://travis-ci.org/viagraphs/replayed)
+
 What it is now :
 
 - a tool for managing MarkDown documents
