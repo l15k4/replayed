@@ -7,15 +7,13 @@ cache:
     directories:
     - $HOME/.ivy2/cache
 before_install:
-- openssl aes-256-cbc -K $encrypted_d998cdda28d1_key -iv $encrypted_d998cdda28d1_iv -in .id_rsa.travis.enc -out $HOME/.ssh/id_rsa -d
-- chmod 600 $HOME/.ssh/id_rsa
 - git config --global user.email "liska.jakub@gmail.com"
 - git config --global user.name "Jakub Liska"
 - git config --global push.default simple
+- mkdir $HOME/temp
 script:
 - sbt ++$TRAVIS_SCALA_VERSION clean fullOptJS
 after_success:
-- mkdir $HOME/temp
 - cp target/scala-2.11/replayed-opt.js README.md README.json $HOME/temp
 - git checkout gh-pages
 - cp $HOME/temp/* ./
