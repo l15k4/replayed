@@ -34,9 +34,11 @@ Is it going to? :
 It is composed of :
 
 - custom impl. of full-fledged HTML textarea on the left - expecting markdown input
+
 > which is basically an alternative to using Ace Editor or CodeMirror
 > however there is no feature known to me that I wouldn't implement.
 > There are additional capabilities though I've done for convenience.
+
 - markdown processor on the right side - rendering html output of MD processing
 - navigation bar at the top - allowing for document management
 
@@ -46,6 +48,7 @@ It was designed for :
 - peer-2-peer communication, having no server, relying on WebRTC only
 - verifiability and versioning - the entire history of each key stroke is captured
   and available, it is quite similar to event sourcing and Akka persistence
+  
 > **Note** that any features regarding collaboration, webRTC, PM or writing specs
 > are not yet implemented. What you see is just a prototype
 > that allows for writing markdown documents
@@ -64,6 +67,7 @@ Limitations :
 - I don't have resources to test it in all browsers
   currently **only Chrome is supported (developed on Chrome 38)**
 - **mobile devices are not supported** and certainly won't be any time soon
+
 > As you can imagine, cross-browser compatibility is a serious issue here
 
 Development :

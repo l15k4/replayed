@@ -1,7 +1,8 @@
 package com.viagraphs
 
-import org.scalajs.dom._
-import org.scalajs.dom.extensions.PimpedHtmlCollection
+import org.scalajs.dom.raw._
+import org.scalajs.dom.ext.PimpedHtmlCollection
+import org.scalajs.dom.html.{Div, Span}
 import upickle._
 import com.viagraphs.idb.IdbSupport._
 import scala.annotation.tailrec
@@ -53,12 +54,12 @@ package object replayed {
     def lineTextNodeByIndex(): (Int, Node) = n match {
       case text if text.nodeType == 3 =>
         val line = text.parentNode.parentNode
-        require(line.asInstanceOf[HTMLDivElement].className == "e_line")
+        require(line.asInstanceOf[Div].className == "e_line")
         (childIdx(line), text)
       // unfortunately one cannot set end offset 0 of next text node, DOM API makes it LINE
-      case line: HTMLDivElement if line.className == "e_line" =>
+      case line: Div if line.className == "e_line" =>
         (childIdx(line), Option(line.firstElementChild.firstChild).getOrElse(line.firstElementChild))
-      case span: HTMLSpanElement if span.className == "e_text" =>
+      case span: Span if span.className == "e_text" =>
         (childIdx(span.parentNode), Option(span.firstChild).getOrElse(span))
       case x => throw new IllegalStateException("Please use lineIdx method on lines only, not : " + x)
     }

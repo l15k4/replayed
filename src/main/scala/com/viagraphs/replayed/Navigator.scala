@@ -2,10 +2,11 @@ package com.viagraphs.replayed
 
 import monifu.concurrent.Scheduler
 import monifu.reactive.Observable
-import org.scalajs.dom._
+import org.scalajs.dom.html.{Div, TextArea}
+import org.scalajs.dom.document
 import upickle.key
 
-class Navigator(val pe: HTMLDivElement, val lines: Lines, val meter: Meter, var pointer: Pointer = Pointer.topLeft)(implicit s: Scheduler) {
+class Navigator(val pe: Div, val lines: Lines, val meter: Meter, var pointer: Pointer = Pointer.topLeft)(implicit s: Scheduler) {
 
   /* this state is a temporary solution to a performance problem */
   var cursorLocked = false
@@ -13,7 +14,7 @@ class Navigator(val pe: HTMLDivElement, val lines: Lines, val meter: Meter, var 
 
   val ee = pe.parentElement
 
-  lazy val cursor = document.createElement("div").markup[HTMLDivElement] { cursor =>
+  lazy val cursor = document.createElement("div").markup[Div] { cursor =>
     cursor.className = "e_cursor"
     cursor.style.height = Lines.LineHeight + "px"
     cursor.style.width = Meter.charWidths.head._2 + "px"
@@ -30,7 +31,7 @@ class Navigator(val pe: HTMLDivElement, val lines: Lines, val meter: Meter, var 
     pe.appendChild(cursor)
   }
 
-  lazy val textArea = document.createElement("textarea").markup[HTMLTextAreaElement] { textArea =>
+  lazy val textArea = document.createElement("textarea").markup[TextArea] { textArea =>
     textArea.className = "e_textarea"
     textArea.wrap = "off"
     textArea.spellcheck = false

@@ -7,7 +7,8 @@ import monifu.reactive.Ack.Continue
 import monifu.reactive.BufferPolicy.Unbounded
 import monifu.reactive.channels.SubjectChannel
 import monifu.reactive._
-import org.scalajs.dom.{HTMLSpanElement, document, console, Event}
+import org.scalajs.dom.{document, console, Event}
+import org.scalajs.dom.html.Span
 import com.viagraphs.replayed.RichNode
 
 import scala.concurrent.Future
@@ -71,7 +72,7 @@ abstract class UiComponent extends Component {
   }
 
   def measure(input: String, className: String): Double = {
-    val tmp = document.createElement("span").markup[HTMLSpanElement] { lines =>
+    val tmp = document.createElement("span").markup[Span] { lines =>
       lines.className = className
     }
     tmp.innerHTML = input.replace("/(<([^>]+)>)/ig", "")
@@ -82,7 +83,7 @@ abstract class UiComponent extends Component {
   }
 
   def dropdown(switch: Switch, targetClass: String, toggleClass: String) = (e:Event) => {
-    import org.scalajs.dom.extensions.PimpedHtmlCollection
+    import org.scalajs.dom.ext.PimpedHtmlCollection
     e.srcElement.forAncestorWithClass(targetClass) { listItem =>
       listItem.parentElement.children.filter(_ != listItem).foreach { siblingLi =>
         val siblingCl = siblingLi.classList

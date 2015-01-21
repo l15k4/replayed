@@ -9,7 +9,8 @@ import monifu.reactive.Ack
 import monifu.reactive.Ack.Continue
 import monifu.reactive.channels.SubjectChannel
 import com.viagraphs.idb.IdbSupport._
-import org.scalajs.dom.{MouseEvent, document, window, HTMLDivElement, Event, KeyboardEvent}
+import org.scalajs.dom.{MouseEvent, document, window, Event, KeyboardEvent}
+import org.scalajs.dom.html.Div
 import scala.collection.mutable.ArrayBuffer
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => lit}
@@ -26,7 +27,7 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
   val editedIndex = store.index[Double]("edited")
   val createdIndex = store.index[Double]("created")
 
-  val ne = document.getElementById("e_navbar").asInstanceOf[HTMLDivElement]
+  val ne = document.getElementById("e_navbar").asInstanceOf[Div]
 
   def onSubscribe(): Unit = {}
 

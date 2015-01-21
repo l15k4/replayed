@@ -7,7 +7,8 @@ import com.viagraphs.replayed.mvc.{ReplayDispatcher, EditorComponent, StashingCh
 import monifu.reactive.Ack.Continue
 import monifu.reactive.{Ack, Observable}
 import monifu.reactive.channels.SubjectChannel
-import org.scalajs.dom.{HTMLDivElement, document}
+import org.scalajs.dom.document
+import org.scalajs.dom.html.Div
 import utest._
 
 import scala.collection.mutable.ListBuffer
@@ -41,13 +42,13 @@ import scala.language.implicitConversions
 
   case class Spec(inputStr: String, texts: Seq[String], position: (Int, String), r: Option[String])
   def prepare(inputStr: String, texts: Seq[String], position: (Int, String), r: Option[String]): Future[(String, Seq[String], String)] = {
-    import org.scalajs.dom.extensions.PimpedHtmlCollection
+    import org.scalajs.dom.ext.PimpedHtmlCollection
     document.getSelection().removeAllRanges()
     if (document.body.hasChildNodes())
       document.body.children.foreach(document.body.removeChild(_))
 
     document.body.appendChild(
-      document.createElement("div").markup[HTMLDivElement] { lines =>
+      document.createElement("div").markup[Div] { lines =>
         lines.id = "e_editor"
         lines.className = "e_editor"
       }

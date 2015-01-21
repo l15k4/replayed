@@ -6,19 +6,20 @@ import monifu.concurrent.Scheduler
 import monifu.reactive.{Observable, Ack}
 import monifu.reactive.Ack.Continue
 import monifu.reactive.channels.SubjectChannel
-import org.scalajs.dom.extensions.PimpedHtmlCollection
+import org.scalajs.dom.ext.PimpedHtmlCollection
 import org.scalajs.dom._
+import org.scalajs.dom.html.{Div, IFrame}
 
 import scala.concurrent.Future
 
 class MarkdownComponent(val channel: SubjectChannel[RxEvent, RxEvent])(implicit s: Scheduler) extends Component {
   object MarkdownTransformer extends Transformer
 
-  val me = document.getElementById("e_markdown").asInstanceOf[HTMLIFrameElement]
-  val ee = document.getElementById("e_editor").asInstanceOf[HTMLDivElement]
-  val lines = document.getElementById("e_lines").asInstanceOf[HTMLDivElement]
+  val me = document.getElementById("e_markdown").asInstanceOf[IFrame]
+  val ee = document.getElementById("e_editor").asInstanceOf[Div]
+  val lines = document.getElementById("e_lines").asInstanceOf[Div]
 
-  def navbarHeight = document.getElementById("e_navbar").asInstanceOf[HTMLDivElement].clientHeight
+  def navbarHeight = document.getElementById("e_navbar").asInstanceOf[Div].clientHeight
   def bodyHeight = document.body.clientHeight
   def editorHeight = (bodyHeight - navbarHeight) + "px"
 

@@ -1,12 +1,13 @@
 package com.viagraphs.replayed
 
-import org.scalajs.dom._
+import org.scalajs.dom.html.{Div, Span}
+import org.scalajs.dom.{Element, document}
 
 import scala.collection.{AbstractSeq, IndexedSeq}
 import scala.scalajs.js.UndefOr
 
 
-class Lines(val le: HTMLDivElement) extends AbstractSeq[Element] with IndexedSeq[Element] {
+class Lines(val le: Div) extends AbstractSeq[Element] with IndexedSeq[Element] {
 
   {
     initLines()
@@ -27,11 +28,11 @@ class Lines(val le: HTMLDivElement) extends AbstractSeq[Element] with IndexedSeq
     initLines()
   }
 
-  def createLineDiv = document.createElement("div").markup[HTMLDivElement] { lineDiv =>
+  def createLineDiv = document.createElement("div").markup[Div] { lineDiv =>
     lineDiv.className = "e_line"
     lineDiv.style.height = "12px"
   }
-  def createLineSpan = document.createElement("span").markup[HTMLDivElement] {textSpan =>
+  def createLineSpan = document.createElement("span").markup[Div] {textSpan =>
     textSpan.className = "e_text"
     textSpan.style.pointerEvents = "none"
   }
@@ -92,7 +93,7 @@ class Lines(val le: HTMLDivElement) extends AbstractSeq[Element] with IndexedSeq
   def insertLine(idx: Int, text: String): Element = {
     if (idx < 0 || idx > length) throw new IndexOutOfBoundsException("Unable to insert element to : " + idx)
     val newLine = createLineDiv
-    val span = createLineSpan.markup[HTMLSpanElement](_.textContent = text)
+    val span = createLineSpan.markup[Span](_.textContent = text)
     newLine.appendChild(span)
     le.insertBefore(newLine, apply(idx)).asInstanceOf[Element]
   }

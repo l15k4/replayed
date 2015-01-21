@@ -11,6 +11,7 @@ import monifu.reactive.channels.SubjectChannel
 import org.scalajs.dom._
 import com.viagraphs.idb.{IndexedDb, Direction, Store}
 import com.viagraphs.idb.IdbSupport._
+import org.scalajs.dom.html.{Div, Span, TextArea}
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Promise, Future}
 import scala.scalajs.js.UndefOr
@@ -44,14 +45,14 @@ trait StashingChangeLog { this: EditorComponent =>
 class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit val s: Scheduler) extends Component with StashingChangeLog {
   val store: Store[Int,Change] = idb.openStore[Int,Change]("nonExisting")
   val componentName = "editor"
-  val ee = document.getElementById("e_editor").asInstanceOf[HTMLDivElement]
+  val ee = document.getElementById("e_editor").asInstanceOf[Div]
 
-  val le = document.createElement("div").markup[HTMLDivElement] { lines =>
+  val le = document.createElement("div").markup[Div] { lines =>
     lines.style.fontSize = "12px"
     lines.className = "e_lines"
     lines.id = "e_lines"
   }
-  val pe = document.createElement("div").markup[HTMLDivElement] { lines =>
+  val pe = document.createElement("div").markup[Div] { lines =>
     lines.className = "e_pointer"
     lines.id = "e_pointer"
   }
@@ -78,15 +79,15 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
     val onClick = (event: MouseEvent) => {
       val shifted = event.shiftKey
       Option((event.srcElement: UndefOr[Element]).getOrElse(event.target.asInstanceOf[Element])).collect[ClickEvent] {
-        case line: HTMLDivElement if line.hasClass("e_line") =>
+        case line: Div if line.hasClass("e_line") =>
           ClickEvent(Some(line.childIdx()), relativeX(event.pageX), shifted)
-        case editor: HTMLDivElement if editor.hasClass("e_editor") =>
+        case editor: Div if editor.hasClass("e_editor") =>
           val lidxOpt = lines.line(relativeY(event.pageY)).map(_.childIdx())
           ClickEvent(lidxOpt, relativeX(event.pageX))
-        case lines: HTMLDivElement if lines.hasClass("e_lines") =>
+        case lines: Div if lines.hasClass("e_lines") =>
           val lineIdx = relativeY(event.pageY)
           ClickEvent(Some(lineIdx), relativeX(event.pageX), shifted)
-        case text: HTMLSpanElement if text.hasClass("e_text") => // This should never occur since e_text has "pointer-events: none"
+        case text: Span if text.hasClass("e_text") => // This should never occur since e_text has "pointer-events: none"
           ClickEvent(Some(text.parentNode.childIdx()), relativeX(event.pageX), shifted)
       }.foreach { ce =>
         channel.pushNext(ce)
@@ -95,9 +96,9 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
 
     val onDoubleClick = (event: MouseEvent) => {
       Option((event.srcElement: UndefOr[Element]).getOrElse(event.target.asInstanceOf[Element])).collect[DoubleClickEvent] {
-        case line: HTMLDivElement if line.hasClass("e_line") =>
+        case line: Div if line.hasClass("e_line") =>
           DoubleClickEvent(line.childIdx(), relativeX(event.pageX))
-        case text: HTMLSpanElement if text.hasClass("e_text") => // This should never occur since e_text has "pointer-events: none"
+        case text: Span if text.hasClass("e_text") => // This should never occur since e_text has "pointer-events: none"
           DoubleClickEvent(text.parentNode.childIdx(), relativeX(event.pageX))
       }.foreach { ce =>
         channel.pushNext(ce)
@@ -110,7 +111,7 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
       kbe.polyfill() match {
         case (KCode.V, _) if ctrl =>
           Option((document.activeElement: UndefOr[Element]).orNull).collect {
-            case textArea: HTMLTextAreaElement if (textArea.value: UndefOr[String]).isDefined => textArea.value
+            case textArea: TextArea if (textArea.value: UndefOr[String]).isDefined => textArea.value
           }.filterNot(_.isEmpty)
            .foreach { value =>
             channel.pushNext(PasteEvent(value))
@@ -144,7 +145,7 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
 
           case (KCode.V, _) if ctrl =>
             Option((document.activeElement: UndefOr[Element]).orNull).foreach {
-              case textArea: HTMLTextAreaElement => textArea.value = ""
+              case textArea: TextArea => textArea.value = ""
             }
             null
 

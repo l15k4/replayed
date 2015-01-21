@@ -24,14 +24,14 @@ object Build extends sbt.Build {
           "-Ywarn-nullary-override", "-Ywarn-nullary-unit", "-Yno-adapted-args"
         ),
         libraryDependencies ++= Seq(
-          "eu.henkelmann" %%% "actuarius" % "0.2.9-SNAPSHOT",
           "org.scala-js" %%% "scalajs-dom" % "0.7.1-SNAPSHOT",
-          "com.scalatags" %%% "scalatags" % "0.4.3-M3",
-          "org.monifu" %%% "monifu" % "0.1-SNAPSHOT",
           "com.viagraphs" %%% "scalajs-keyboard-polyfill" % "0.0.3-SNAPSHOT",
           "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.6-SNAPSHOT",
-          "com.lihaoyi" %%% "upickle" % "0.2.6-M3",
-          "com.lihaoyi" %%% "utest" % "0.2.5-M3-SNAPSHOT" % "test"
+          "eu.henkelmann" %%% "actuarius" % "0.2.9-SNAPSHOT",
+          "org.monifu" %%% "monifu" % "0.1-SNAPSHOT",
+          "com.lihaoyi" %%% "scalatags" % "0.4.3-RC1",
+          "com.lihaoyi" %%% "upickle" % "0.2.6-RC1",
+          "com.lihaoyi" %%% "utest" % "0.2.5-RC1" % "test"
         ),
         bootSnippet := "com.viagraphs.replayed.Replayed().main();",
         scalaJSStage := FastOptStage,
