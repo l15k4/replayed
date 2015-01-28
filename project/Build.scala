@@ -14,7 +14,7 @@ object Build extends sbt.Build {
         organization := "com.viagraphs",
         name := "replayed",
         version := "0.1",
-        scalaVersion := "2.11.4",
+        scalaVersion := "2.11.5",
         resolvers += Resolver.mavenLocal,
         watchSources += baseDirectory.value / "index.html",
         scalacOptions ++= Seq(
@@ -27,7 +27,7 @@ object Build extends sbt.Build {
           "org.scala-js" %%% "scalajs-dom" % "0.7.1-SNAPSHOT",
           "com.viagraphs" %%% "scalajs-keyboard-polyfill" % "0.0.3-SNAPSHOT",
           "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.6-SNAPSHOT",
-          "eu.henkelmann" %%% "actuarius" % "0.2.9-SNAPSHOT",
+          "com.viagraphs" %%% "actuarius" % "0.2.9-SNAPSHOT",
           "org.monifu" %%% "monifu" % "0.1-SNAPSHOT",
           "com.lihaoyi" %%% "scalatags" % "0.4.3-RC1",
           "com.lihaoyi" %%% "upickle" % "0.2.6-RC1",
