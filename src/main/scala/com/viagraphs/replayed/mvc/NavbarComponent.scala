@@ -7,8 +7,8 @@ import com.viagraphs.replayed.event._
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack
 import monifu.reactive.Ack.Continue
-import monifu.reactive.channels.SubjectChannel
 import com.viagraphs.idb.IdbSupport._
+import monifu.reactive.channels.ObservableChannel
 import org.scalajs.dom.{MouseEvent, document, window, Event, KeyboardEvent}
 import org.scalajs.dom.html.Div
 import scala.collection.mutable.ArrayBuffer
@@ -17,10 +17,10 @@ import scala.scalajs.js.Dynamic.{literal => lit}
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Random}
 import scalatags.JsDom.all._
-import upickle._
+import upickle.legacy._
 import com.viagraphs.replayed.IOUtils._
 
-class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) extends UiComponent {
+class NavbarComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) extends UiComponent {
   val componentName = "navbar"
 
   val store = idb.openStore[Double, Document](Replayed.docStoreName)
@@ -221,7 +221,7 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
               import scala.concurrent.duration._
               val uid = Random.nextInt()
               holdingDelete = (uid, true)
-              countDown(3, 600.millis)
+              countDown(3, 600)
                 .take(4)
                 .doOnComplete {
                   holdingDelete match {
@@ -284,7 +284,7 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
           store.add(List(newDoc)).doOnComplete {
             render(newDoc, allDocs.unzip._2.toList, None)
           }
-        }.asCompletedFuture
+        }.asCompletedFuture.map(_ => Continue)
       }
     case OpenDoc(aDoc) =>
       createdIndex.get(createdIndex.allKeys(Direction.Next)).doWorkOnSuccess { allDocs =>
@@ -293,13 +293,13 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
             created != aDoc.created
           }.unzip._2.toList
         render(aDoc, toBeListed, None)
-      }.asCompletedFuture
+      }.asCompletedFuture.map(_ => Continue)
     case StoreDoc(aDoc) =>
-      store.update(List(aDoc)).asCompletedFuture
+      store.update(List(aDoc)).asCompletedFuture.map(_ => Continue)
     case DeleteDoc(aDoc) =>
       store.delete(List(aDoc.created)).doOnComplete {
         channel.pushNext(NewOrLast)
-      }.asCompletedFuture
+      }.asCompletedFuture.map(_ => Continue)
     case NewOrLast =>
       createdIndex.get(createdIndex.lastKey()).doWorkOnSuccess { lastCol =>
         lastCol.headOption match {
@@ -308,14 +308,14 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
           case None =>
             channel.pushNext(NewDoc(data = None))
         }
-      }.asCompletedFuture
+      }.asCompletedFuture.map(_ => Continue)
     case _ => Continue
   }
 
   def onComplete(): Unit = {}
 }
 object NavbarComponent {
-  def apply(channel: SubjectChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) = new NavbarComponent(channel, idb)
+  def apply(channel: ObservableChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) = new NavbarComponent(channel, idb)
 }
 
 /**

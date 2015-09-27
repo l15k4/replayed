@@ -3,8 +3,8 @@ package com.viagraphs
 import org.scalajs.dom.raw._
 import org.scalajs.dom.ext.PimpedHtmlCollection
 import org.scalajs.dom.html.{Div, Span}
-import upickle._
-import com.viagraphs.idb.IdbSupport._
+import upickle.legacy._
+import upickle.Js
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 

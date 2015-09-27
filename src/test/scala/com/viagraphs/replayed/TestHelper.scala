@@ -5,8 +5,8 @@ import com.viagraphs.scalajs.dom.KCode
 import com.viagraphs.replayed.event._
 import com.viagraphs.replayed.mvc.{ReplayDispatcher, EditorComponent, StashingChangeLog}
 import monifu.reactive.Ack.Continue
+import monifu.reactive.channels.ObservableChannel
 import monifu.reactive.{Ack, Observable}
-import monifu.reactive.channels.SubjectChannel
 import org.scalajs.dom.document
 import org.scalajs.dom.html.Div
 import utest._
@@ -60,7 +60,7 @@ import scala.language.implicitConversions
     }.asCompletedFuture.map(e => (inputStr, texts, r.fold("No Range"){range => document.getSelection().getRangeAt(0).toString}))
   }
 
-  class MockEditorComponent(spec: Spec, channel: SubjectChannel[RxEvent, RxEvent], idb: IndexedDb) extends EditorComponent(channel, idb) with LogSpy {
+  class MockEditorComponent(spec: Spec, channel: ObservableChannel[RxEvent, RxEvent], idb: IndexedDb) extends EditorComponent(channel, idb) with LogSpy {
     val clickRegex = "\\[(\\d+)?,(\\d+\\.\\d+)\\]".r
     val pasteRegex = """\[([\s\S]*)\]""".r
 

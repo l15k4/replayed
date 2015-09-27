@@ -13,8 +13,8 @@ object Build extends sbt.Build {
       .settings(
         organization := "com.viagraphs",
         name := "replayed",
-        version := "0.1",
-        scalaVersion := "2.11.5",
+        version := "0.2",
+        scalaVersion := "2.11.7",
         resolvers += Resolver.mavenLocal,
         watchSources += baseDirectory.value / "index.html",
         scalacOptions ++= Seq(
@@ -24,14 +24,14 @@ object Build extends sbt.Build {
           "-Ywarn-nullary-override", "-Ywarn-nullary-unit", "-Yno-adapted-args"
         ),
         libraryDependencies ++= Seq(
-          "org.scala-js" %%% "scalajs-dom" % "0.7.1-SNAPSHOT",
-          "com.viagraphs" %%% "scalajs-keyboard-polyfill" % "0.0.3-SNAPSHOT",
-          "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.6-SNAPSHOT",
-          "com.viagraphs" %%% "actuarius" % "0.2.9-SNAPSHOT",
-          "org.monifu" %%% "monifu" % "0.1-SNAPSHOT",
-          "com.lihaoyi" %%% "scalatags" % "0.4.3-RC1",
-          "com.lihaoyi" %%% "upickle" % "0.2.6-RC1",
-          "com.lihaoyi" %%% "utest" % "0.2.5-RC1" % "test"
+          "org.scala-js" %%% "scalajs-dom" % "0.8.1",
+          "com.viagraphs" %%% "scalajs-keyboard-polyfill" % "0.0.4-SNAPSHOT",
+          "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.8-SNAPSHOT",
+          "com.viagraphs" %%% "actuarius" % "0.3.0-SNAPSHOT",
+          "org.monifu" %%% "monifu" % "1.0-RC3",
+          "com.lihaoyi" %%% "scalatags" % "0.5.2",
+          "com.lihaoyi" %%% "upickle" % "0.3.6",
+          "com.lihaoyi" %%% "utest" % "0.3.1" % "test"
         ),
         bootSnippet := "com.viagraphs.replayed.Replayed().main();",
         scalaJSStage := FastOptStage,

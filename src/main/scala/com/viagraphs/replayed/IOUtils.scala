@@ -3,7 +3,7 @@ package com.viagraphs.replayed
 import org.scalajs.dom._
 
 import scala.concurrent.{Promise, Future}
-import upickle._
+import upickle.legacy._
 
 import scala.util.Try
 

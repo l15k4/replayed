@@ -4,7 +4,7 @@ import monifu.concurrent.Scheduler
 import monifu.reactive.Observable
 import org.scalajs.dom.html.{Div, TextArea}
 import org.scalajs.dom.document
-import upickle.key
+import upickle.legacy.key
 
 class Navigator(val pe: Div, val lines: Lines, val meter: Meter, var pointer: Pointer = Pointer.topLeft)(implicit s: Scheduler) {
 
@@ -179,7 +179,7 @@ case class Pointer(lidx: Int, chidx: Int, bottom: Double, left: Double) extends 
 }
 
 object Indices {
-  def unapply(p: Indices): Option[(Int, Int)] = Some((p.lidx, p.chidx))
+  def unapply(i: Indices): Option[(Int, Int)] = Some((i.lidx, i.chidx))
 }
 object PointerPX {
   def unapply(p: Pointer): Option[(Double, Double, Double)] = Some((p.bottom, p.left, p.bottom - Lines.LineHeight))

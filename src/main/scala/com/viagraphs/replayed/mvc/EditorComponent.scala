@@ -5,9 +5,9 @@ import com.viagraphs.scalajs.dom.KeyboardPolyfill.PfEvent
 import com.viagraphs.replayed.event._
 import com.viagraphs.replayed.{Navigator, _}
 import monifu.concurrent.Scheduler
+import monifu.reactive.channels.ObservableChannel
 import monifu.reactive.{Observable, Ack}
 import monifu.reactive.Ack.Continue
-import monifu.reactive.channels.SubjectChannel
 import org.scalajs.dom._
 import com.viagraphs.idb.{IndexedDb, Direction, Store}
 import com.viagraphs.idb.IdbSupport._
@@ -42,7 +42,7 @@ trait StashingChangeLog { this: EditorComponent =>
   def stashApply(entry: Change): Observable[(Int,Change)] = store.add(entry :: Nil)
 }
 
-class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit val s: Scheduler) extends Component with StashingChangeLog {
+class EditorComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit val s: Scheduler) extends Component with StashingChangeLog {
   val store: Store[Int,Change] = idb.openStore[Int,Change]("nonExisting")
   val componentName = "editor"
   val ee = document.getElementById("e_editor").asInstanceOf[Div]
@@ -302,7 +302,7 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
               Continue
             case None => Continue
           }
-        }.asCompletedFuture
+        }.asCompletedFuture.map(_.head)
 
       case RedoEvent =>
         if (stashSize > 0) {
@@ -310,14 +310,14 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
           import meter._
           nav.moveTo(Pointer.topLeft.v(lidx).>(lines.getLineTextUpTo(lidx, chidx)))
           val redone = op.execute(nav)
-          stashApply(redone).asCompletedFuture
+          stashApply(redone).asCompletedFuture.map(_ => Continue)
         } else {
           Continue
         }
 
       case e: SideEffect =>
         Future(e.mutate(nav)).flatMap {
-          case Some(change) => commit(change).asCompletedFuture
+          case Some(change) => commit(change).asCompletedFuture.map(_ => Continue)
           case None => Continue
         }
 
@@ -328,5 +328,5 @@ class EditorComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
 }
 
 object EditorComponent {
-  def apply(channel: SubjectChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) = new EditorComponent(channel, idb)
+  def apply(channel: ObservableChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) = new EditorComponent(channel, idb)
 }

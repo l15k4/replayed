@@ -74,12 +74,11 @@ Development :
 
 - it has not been published yet since it depends on an unaccepted PR and a fork
 - which means that building it would require installing my fork of uTest and Actuarius
-- I'll wait until Scala.js 6.0.0 is released to deal with the rest
 
 ### Version
 
-- Replayed 0.1
-- Scala.js 6.0.0M3
+- Replayed 0.2
+- Scala.js 0.6.5
 
 ### Technologies
 

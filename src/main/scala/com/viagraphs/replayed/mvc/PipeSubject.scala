@@ -12,8 +12,7 @@ final class PipeSubject[T] private (implicit s: Scheduler) extends Subject[T,T] 
   private[this] var errorThrown: Throwable = null
   @volatile private[this] var subscriptions = Array.empty[Observer[T]]
 
-  def subscribeFn(subscriber: Subscriber[T]): Unit = {
-    val observer = subscriber.observer
+  def subscribeFn(observer: Subscriber[T]): Unit = {
     lock.synchronized {
       if (!isCompleted)
         subscriptions = createSubscription(subscriptions, observer)

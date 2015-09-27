@@ -1,6 +1,6 @@
 package com.viagraphs.replayed
 
-import upickle._
+import upickle.legacy.key
 
 import scala.collection.immutable.TreeMap
 

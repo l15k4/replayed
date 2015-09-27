@@ -1,24 +1,50 @@
 package com.viagraphs.replayed.mvc
 
+import java.util.concurrent.TimeUnit
+
 import com.viagraphs.replayed.event.RxEvent
 import com.viagraphs.replayed.RichHTMLElement
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.Continue
 import monifu.reactive.OverflowStrategy.Unbounded
-import monifu.reactive.channels.SubjectChannel
+import monifu.reactive.channels.{ObservableChannel}
 import monifu.reactive._
+import monifu.reactive.observers.BufferedSubscriber
 import org.scalajs.dom.{document, console, Event}
 import org.scalajs.dom.html.Span
 import com.viagraphs.replayed.RichNode
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 import scala.util.{Failure, Try}
 import scala.util.control.NonFatal
 
-class ReplayDispatcher private (policy: OverflowStrategy.Synchronous, s: Scheduler) extends SubjectChannel[RxEvent, RxEvent](PipeSubject[RxEvent]()(s), policy)(s)
+class ReplayDispatcher private (overflowStrategy: OverflowStrategy.Synchronous, s: Scheduler) extends ObservableChannel[RxEvent, RxEvent] {
+
+  val subject = PipeSubject[RxEvent]()(s)
+
+  private[this] val channel = BufferedSubscriber(
+    Subscriber(subject, s), overflowStrategy)
+
+  final def onSubscribe(subscriber: Subscriber[RxEvent]): Unit = {
+    subject.onSubscribe(subscriber)
+  }
+
+  final def pushNext(elems: RxEvent*): Unit = {
+    for (elem <- elems) channel.onNext(elem)
+  }
+
+  final def pushComplete(): Unit = {
+    channel.onComplete()
+  }
+
+  final def pushError(ex: Throwable): Unit = {
+    channel.onError(ex)
+  }
+
+}
 object ReplayDispatcher {
-  def apply(fn: (SubjectChannel[RxEvent, RxEvent]) => Iterable[Component], bufferPolicy: OverflowStrategy.Synchronous = Unbounded)(implicit s: Scheduler): SubjectChannel[RxEvent, RxEvent] = {
+  def apply(fn: (ObservableChannel[RxEvent, RxEvent]) => Iterable[Component], bufferPolicy: OverflowStrategy.Synchronous = Unbounded)(implicit s: Scheduler): ObservableChannel[RxEvent, RxEvent] = {
     val dispatcher = new ReplayDispatcher(bufferPolicy, s)
     val components = fn(dispatcher)
     components.foreach { component =>
@@ -30,7 +56,7 @@ object ReplayDispatcher {
 }
 
 abstract class Component extends Observer[RxEvent] {
-  def channel: SubjectChannel[RxEvent, RxEvent]
+  def channel: ObservableChannel[RxEvent, RxEvent]
   def componentName: String
   def onSubscribe(): Unit
   def onNext(elem: RxEvent): Future[Ack] = {
@@ -56,9 +82,9 @@ case object toggle extends Switch
 
 
 abstract class UiComponent extends Component {
-  def countDown(from: Long, delay: FiniteDuration): Observable[Long] = {
+  def countDown(from: Long, ms: Long): Observable[Long] = {
     Observable.create { o =>
-      val s = o.scheduler
+      import o.{scheduler => s}
 
       s.scheduleOnce(0L.seconds) {new Runnable { self =>
         private[this] var counter = from
@@ -66,7 +92,7 @@ abstract class UiComponent extends Component {
         def scheduleNext(r: Try[Ack]): Unit = r match {
           case Continue.IsSuccess =>
             counter -= 1
-            s.scheduleOnce(delay)(self)
+            s.scheduleOnce(0L, unit = TimeUnit.MILLISECONDS, r = self)
 
           case Failure(ex) =>
             s.reportFailure(ex)

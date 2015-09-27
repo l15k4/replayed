@@ -3,16 +3,16 @@ package com.viagraphs.replayed.mvc
 import com.viagraphs.replayed.event._
 import eu.henkelmann.actuarius.Transformer
 import monifu.concurrent.Scheduler
+import monifu.reactive.channels.ObservableChannel
 import monifu.reactive.{Observable, Ack}
 import monifu.reactive.Ack.Continue
-import monifu.reactive.channels.SubjectChannel
 import org.scalajs.dom.ext.PimpedHtmlCollection
 import org.scalajs.dom._
 import org.scalajs.dom.html.{Div, IFrame}
 
 import scala.concurrent.Future
 
-class MarkdownComponent(val channel: SubjectChannel[RxEvent, RxEvent])(implicit s: Scheduler) extends Component {
+class MarkdownComponent(val channel: ObservableChannel[RxEvent, RxEvent])(implicit s: Scheduler) extends Component {
   object MarkdownTransformer extends Transformer
 
   val me = document.getElementById("e_markdown").asInstanceOf[IFrame]
@@ -75,5 +75,5 @@ class MarkdownComponent(val channel: SubjectChannel[RxEvent, RxEvent])(implicit 
 }
 
 object MarkdownComponent {
-  def apply(channel: SubjectChannel[RxEvent, RxEvent])(implicit s: Scheduler): MarkdownComponent = new MarkdownComponent(channel)
+  def apply(channel: ObservableChannel[RxEvent, RxEvent])(implicit s: Scheduler): MarkdownComponent = new MarkdownComponent(channel)
 }
