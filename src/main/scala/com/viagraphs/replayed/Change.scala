@@ -1,6 +1,7 @@
 package com.viagraphs.replayed
 
-import upickle.legacy.key
+import upickle.Js
+import upickle.legacy._
 
 import scala.collection.immutable.TreeMap
 
@@ -257,7 +258,8 @@ case class Paste(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolean)
   }
 }
 
-@key("rpl") case class Replace(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolean) extends Op {
+@key("rpl")
+case class Replace(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolean) extends Op {
 
   def execute(nav: Navigator) = {
     val Navigator(lines, meter, fp) = nav
@@ -281,5 +283,26 @@ case class Paste(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolean)
 
   def revert(nav: Navigator) = {
     Change(this, nav.pointer, Paste(lns, starts).execute(nav).tp)
+  }
+}
+
+object Change {
+  implicit val ChangeW: Writer[Change] = Writer[Change](
+    change => Js.Arr(
+      writeJs[Op](change.op),
+      Js.Num(change.fp.lidx), Js.Num(change.tp.lidx),
+      Js.Num(change.fp.chidx), Js.Num(change.tp.chidx)
+    )
+
+  )
+  implicit val ChangeR: Reader[Change] = Reader[Change] {
+    case ch: Js.Arr =>
+      val values = ch.value
+      val op = readJs[Op](values(0))
+      val fy = readJs[Int](values(1))
+      val ty = readJs[Int](values(2))
+      val fx = readJs[Int](values(3))
+      val tx = readJs[Int](values(4))
+      Change(op, Coord(fy, fx), Coord(ty, tx))
   }
 }

@@ -8,7 +8,7 @@ import scala.scalajs.js.Dynamic.{literal => lit}
 import scala.scalajs.js.JSApp
 import org.scalajs.dom.console
 import com.viagraphs.idb.IdbSupport._
-import upickle._
+import upickle.legacy._
 import IOUtils._
 
 import scala.util.{Failure, Success}

@@ -3,31 +3,10 @@ package com.viagraphs
 import org.scalajs.dom.raw._
 import org.scalajs.dom.ext.PimpedHtmlCollection
 import org.scalajs.dom.html.{Div, Span}
-import upickle.legacy._
-import upickle.Js
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 
 package object replayed {
-
-  implicit val ChangeW: Writer[Change] = Writer[Change](
-    x => Js.Arr(
-        writeJs[Op](x.op),
-        Js.Num(x.fp.lidx), Js.Num(x.tp.lidx),
-        Js.Num(x.fp.chidx), Js.Num(x.tp.chidx)
-    )
-
-  )
-  implicit val ChangeR: Reader[Change] = Reader[Change] {
-    case change: Js.Arr =>
-      val values = change.value
-      val op = readJs[Op](values(0))
-      val fy = readJs[Int](values(1))
-      val ty = readJs[Int](values(2))
-      val fx = readJs[Int](values(3))
-      val tx = readJs[Int](values(4))
-      Change(op, Coord(fy, fx), Coord(ty, tx))
-  }
 
   implicit class RichNode(n: Node) {
 

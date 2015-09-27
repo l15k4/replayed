@@ -2,7 +2,6 @@ package com.viagraphs.replayed.mvc
 
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.{Cancel, Continue}
-import monifu.reactive.internals.{FutureAckExtensions, PromiseCounter}
 import monifu.reactive.{Subscriber, Ack, Observer, Subject}
 import scala.concurrent.Future
 
@@ -12,7 +11,7 @@ final class PipeSubject[T] private (implicit s: Scheduler) extends Subject[T,T] 
   private[this] var errorThrown: Throwable = null
   @volatile private[this] var subscriptions = Array.empty[Observer[T]]
 
-  def subscribeFn(observer: Subscriber[T]): Unit = {
+  def onSubscribe(observer: Subscriber[T]): Unit = {
     lock.synchronized {
       if (!isCompleted)
         subscriptions = createSubscription(subscriptions, observer)
