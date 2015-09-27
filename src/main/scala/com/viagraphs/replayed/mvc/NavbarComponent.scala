@@ -1,24 +1,24 @@
 package com.viagraphs.replayed.mvc
 
-import com.viagraphs.idb.{Direction, UpgradeDb, IndexedDb}
-import com.viagraphs.replayed.Document
-import com.viagraphs.replayed._
+import com.viagraphs.idb.IdbSupport._
+import com.viagraphs.idb.{Direction, IndexedDb, UpgradeDb}
+import com.viagraphs.replayed.IOUtils._
 import com.viagraphs.replayed.event._
+import com.viagraphs.replayed.{Document, _}
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack
 import monifu.reactive.Ack.Continue
-import com.viagraphs.idb.IdbSupport._
 import monifu.reactive.channels.ObservableChannel
-import org.scalajs.dom.{MouseEvent, document, window, Event, KeyboardEvent}
 import org.scalajs.dom.html.Div
+import org.scalajs.dom.{Event, KeyboardEvent, MouseEvent, document, window}
+import upickle.legacy._
+
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => lit}
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Random}
+import scala.util.{Failure, Random, Success}
 import scalatags.JsDom.all._
-import upickle.legacy._
-import com.viagraphs.replayed.IOUtils._
 
 class NavbarComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: IndexedDb)(implicit s: Scheduler) extends UiComponent {
   val componentName = "navbar"
@@ -218,7 +218,6 @@ class NavbarComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
               deleteDocSpan.textContent = "delete"
             },
             onmousedown := {() =>
-              import scala.concurrent.duration._
               val uid = Random.nextInt()
               holdingDelete = (uid, true)
               countDown(3, 600)

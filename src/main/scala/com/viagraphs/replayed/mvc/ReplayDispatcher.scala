@@ -3,21 +3,20 @@ package com.viagraphs.replayed.mvc
 import java.util.concurrent.TimeUnit
 
 import com.viagraphs.replayed.event.RxEvent
-import com.viagraphs.replayed.RichHTMLElement
+import com.viagraphs.replayed.{RichHTMLElement, RichNode}
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.Continue
 import monifu.reactive.OverflowStrategy.Unbounded
-import monifu.reactive.channels.{ObservableChannel}
 import monifu.reactive._
+import monifu.reactive.channels.ObservableChannel
 import monifu.reactive.observers.BufferedSubscriber
-import org.scalajs.dom.{document, console, Event}
 import org.scalajs.dom.html.Span
-import com.viagraphs.replayed.RichNode
+import org.scalajs.dom.{Event, console, document}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{Failure, Try}
 import scala.util.control.NonFatal
+import scala.util.{Failure, Try}
 
 class ReplayDispatcher private (overflowStrategy: OverflowStrategy.Synchronous, s: Scheduler) extends ObservableChannel[RxEvent, RxEvent] {
 

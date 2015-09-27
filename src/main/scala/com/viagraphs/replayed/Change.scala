@@ -1,6 +1,7 @@
 package com.viagraphs.replayed
 
 import upickle.Js
+import upickle.legacy.Aliases._
 import upickle.legacy._
 
 import scala.collection.immutable.TreeMap
@@ -287,15 +288,18 @@ case class Replace(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolea
 }
 
 object Change {
-  /**
-   * Workarounds for Upickle bug, it ignores 'key' annotation of the case class with TreeMap argument that won't be serialized
-   */
-  implicit val TreeMapW: Writer[TreeMap[Int, (String, String)]] = Writer[TreeMap[Int, (String, String)]](
-    _ => null
+
+  def validate[T](name: String)(pf: PartialFunction[Js.Value, T]) = Internal.validate(name)(pf)
+
+  /** upickle doesn't seem to handle https://github.com/lihaoyi/upickle/issues/46 */
+  implicit def TreeMapR[V: R]: R[TreeMap[Int, V]] = R[TreeMap[Int, V]](
+    validate("Unable to read Map[String, V]"){
+      case Js.Obj(arr@_*) => TreeMap(arr.map { case (k,v) => (k.toInt, readJs[V](v))}:_*)
+    }
   )
 
-  implicit val TreeMapR: Reader[TreeMap[Int, (String, String)]] = Reader[TreeMap[Int, (String, String)]] {
-    case _ => null
+  implicit def TreeMapW[V: W]: W[TreeMap[Int, V]] = W[TreeMap[Int, V]] {
+    obj => Js.Obj(obj.toSeq.map(x => (x._1.toString, writeJs[V](x._2))): _*)
   }
 
   implicit val ChangeW: Writer[Change] = Writer[Change](
