@@ -34,7 +34,7 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
   private def exportJson(storeName: String, onDone: (Int) => Unit, onNextRecord: (Int, Change) => Unit): Unit = {
     val curDocStore = idb.openStore[Int,Change](storeName)
     curDocStore.count.doWorkOnSuccess { counts =>
-      val count = counts(0)
+      val count = counts.head
       curDocStore.get(curDocStore.allKeys(Direction.Next))
         .doOnComplete(onDone(count))
         .foreach { case (key, record) =>
@@ -72,10 +72,7 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
       case Some(msg) =>
         import scala.concurrent.duration._
         errorField.textContent = msg
-        s.scheduleOnce(
-          3.seconds,
-          errorField.style.visibility = "hidden"
-        )
+        s.scheduleOnce(3.seconds)(errorField.style.visibility = "hidden")
       case None => errorField.style.visibility = "hidden"
     }
 
@@ -274,7 +271,7 @@ class NavbarComponent(val channel: SubjectChannel[RxEvent, RxEvent], idb: Indexe
         idb.upgrade(
           UpgradeDb(
             Replayed.editorDbName,
-            versions(0) + 1,
+            versions.head + 1,
             Some { (db, ve) =>
               db.createObjectStore(created.toString, lit("autoIncrement" -> true))
               ()

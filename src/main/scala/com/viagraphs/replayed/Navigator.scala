@@ -59,10 +59,9 @@ class Navigator(val pe: Div, val lines: Lines, val meter: Meter, var pointer: Po
         pe.style.left = left + "px"
       }
 
-      s.scheduleOnce( 500.millis, {
-          cursorLocked = false
-        }
-      )
+      s.scheduleOnce( 500.millis) {
+        cursorLocked = false
+      }
     }
   }
 

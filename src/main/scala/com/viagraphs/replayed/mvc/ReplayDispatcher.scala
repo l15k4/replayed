@@ -4,7 +4,7 @@ import com.viagraphs.replayed.event.RxEvent
 import com.viagraphs.replayed.RichHTMLElement
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.Continue
-import monifu.reactive.BufferPolicy.Unbounded
+import monifu.reactive.OverflowStrategy.Unbounded
 import monifu.reactive.channels.SubjectChannel
 import monifu.reactive._
 import org.scalajs.dom.{document, console, Event}
@@ -12,12 +12,13 @@ import org.scalajs.dom.html.Span
 import com.viagraphs.replayed.RichNode
 
 import scala.concurrent.Future
-import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.duration._
+import scala.util.{Failure, Try}
 import scala.util.control.NonFatal
 
-class ReplayDispatcher private (policy: BufferPolicy, s: Scheduler) extends SubjectChannel[RxEvent, RxEvent](PipeSubject[RxEvent]()(s), policy)(s)
+class ReplayDispatcher private (policy: OverflowStrategy.Synchronous, s: Scheduler) extends SubjectChannel[RxEvent, RxEvent](PipeSubject[RxEvent]()(s), policy)(s)
 object ReplayDispatcher {
-  def apply(fn: (SubjectChannel[RxEvent, RxEvent]) => Iterable[Component], bufferPolicy: BufferPolicy = Unbounded)(implicit s: Scheduler): SubjectChannel[RxEvent, RxEvent] = {
+  def apply(fn: (SubjectChannel[RxEvent, RxEvent]) => Iterable[Component], bufferPolicy: OverflowStrategy.Synchronous = Unbounded)(implicit s: Scheduler): SubjectChannel[RxEvent, RxEvent] = {
     val dispatcher = new ReplayDispatcher(bufferPolicy, s)
     val components = fn(dispatcher)
     components.foreach { component =>
@@ -55,19 +56,33 @@ case object toggle extends Switch
 
 
 abstract class UiComponent extends Component {
-  def countDown(from: Int, delay: FiniteDuration): Observable[Long] = {
-    import monifu.reactive.internals.FutureAckExtensions
-    Observable.create { subscriber =>
-      implicit val s = subscriber.scheduler
-      val o = subscriber.observer
+  def countDown(from: Long, delay: FiniteDuration): Observable[Long] = {
+    Observable.create { o =>
+      val s = o.scheduler
 
-      var counter = from
-      s.scheduleRecursive(Duration.Zero, delay, { reschedule =>
-        o.onNext(counter).onContinue {
-          counter -= 1
-          reschedule()
+      s.scheduleOnce(0L.seconds) {new Runnable { self =>
+        private[this] var counter = from
+
+        def scheduleNext(r: Try[Ack]): Unit = r match {
+          case Continue.IsSuccess =>
+            counter -= 1
+            s.scheduleOnce(delay)(self)
+
+          case Failure(ex) =>
+            s.reportFailure(ex)
+          case _ =>
+            () // do nothing
         }
-      })
+
+        def run(): Unit = {
+          val ack = o.onNext(counter)
+
+          if (ack.isCompleted)
+            scheduleNext(ack.value.get)
+          else
+            ack.onComplete(scheduleNext)
+        }
+      }}
     }
   }
 
