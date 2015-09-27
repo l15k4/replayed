@@ -128,7 +128,7 @@ trait Arrows {
   def >(widths: Array[Double]): Pointer
 }
 
-trait Indices {
+sealed trait Indices {
 
   def lidx: Int
   def chidx: Int

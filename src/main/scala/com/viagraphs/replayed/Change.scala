@@ -287,6 +287,17 @@ case class Replace(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolea
 }
 
 object Change {
+  /**
+   * Workarounds for Upickle bug, it ignores 'key' annotation of the case class with TreeMap argument that won't be serialized
+   */
+  implicit val TreeMapW: Writer[TreeMap[Int, (String, String)]] = Writer[TreeMap[Int, (String, String)]](
+    _ => null
+  )
+
+  implicit val TreeMapR: Reader[TreeMap[Int, (String, String)]] = Reader[TreeMap[Int, (String, String)]] {
+    case _ => null
+  }
+
   implicit val ChangeW: Writer[Change] = Writer[Change](
     change => Js.Arr(
       writeJs[Op](change.op),
@@ -295,6 +306,7 @@ object Change {
     )
 
   )
+
   implicit val ChangeR: Reader[Change] = Reader[Change] {
     case ch: Js.Arr =>
       val values = ch.value
