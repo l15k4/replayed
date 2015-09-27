@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 import com.viagraphs.replayed.event.RxEvent
 import com.viagraphs.replayed.{RichHTMLElement, RichNode}
 import monifu.concurrent.Scheduler
-import monifu.reactive.Ack.Continue
+import monifu.reactive.Ack.{Cancel, Continue}
 import monifu.reactive.OverflowStrategy.Unbounded
 import monifu.reactive._
 import monifu.reactive.channels.ObservableChannel
@@ -64,7 +64,7 @@ abstract class Component extends Observer[RxEvent] {
     } catch {
       case NonFatal(ex) => 
         onError(ex)
-        Continue
+        Cancel
     }
   }
   def onNextSafe(elem: RxEvent): Future[Ack]

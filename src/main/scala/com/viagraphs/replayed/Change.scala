@@ -1,7 +1,7 @@
 package com.viagraphs.replayed
 
+import com.viagraphs.idb.IdbSupport
 import upickle.Js
-import upickle.legacy.Aliases._
 import upickle.legacy._
 
 import scala.collection.immutable.TreeMap
@@ -288,19 +288,8 @@ case class Replace(lns: TreeMap[Int, (String, String)], @key("s") starts: Boolea
 }
 
 object Change {
-
-  def validate[T](name: String)(pf: PartialFunction[Js.Value, T]) = Internal.validate(name)(pf)
-
-  /** upickle doesn't seem to handle https://github.com/lihaoyi/upickle/issues/46 */
-  implicit def TreeMapR[V: R]: R[TreeMap[Int, V]] = R[TreeMap[Int, V]](
-    validate("Unable to read Map[String, V]"){
-      case Js.Obj(arr@_*) => TreeMap(arr.map { case (k,v) => (k.toInt, readJs[V](v))}:_*)
-    }
-  )
-
-  implicit def TreeMapW[V: W]: W[TreeMap[Int, V]] = W[TreeMap[Int, V]] {
-    obj => Js.Obj(obj.toSeq.map(x => (x._1.toString, writeJs[V](x._2))): _*)
-  }
+  implicit val treeMapR = IdbSupport.TreeMapR[Int, (String, String)]
+  implicit val treeMapW = IdbSupport.TreeMapW[Int, (String, String)]
 
   implicit val ChangeW: Writer[Change] = Writer[Change](
     change => Js.Arr(
@@ -308,7 +297,6 @@ object Change {
       Js.Num(change.fp.lidx), Js.Num(change.tp.lidx),
       Js.Num(change.fp.chidx), Js.Num(change.tp.chidx)
     )
-
   )
 
   implicit val ChangeR: Reader[Change] = Reader[Change] {

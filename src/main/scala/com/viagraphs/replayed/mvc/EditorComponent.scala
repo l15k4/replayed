@@ -1,19 +1,20 @@
 package com.viagraphs.replayed.mvc
 
-import com.viagraphs.scalajs.dom.KCode
-import com.viagraphs.scalajs.dom.KeyboardPolyfill.PfEvent
+import com.viagraphs.idb.IdbSupport._
+import com.viagraphs.idb.{Direction, IndexedDb, Store}
 import com.viagraphs.replayed.event._
 import com.viagraphs.replayed.{Navigator, _}
+import com.viagraphs.scalajs.dom.KCode
+import com.viagraphs.scalajs.dom.KeyboardPolyfill.PfEvent
 import monifu.concurrent.Scheduler
-import monifu.reactive.channels.ObservableChannel
-import monifu.reactive.{Observable, Ack}
 import monifu.reactive.Ack.Continue
+import monifu.reactive.channels.ObservableChannel
+import monifu.reactive.{Ack, Observable}
 import org.scalajs.dom._
-import com.viagraphs.idb.{IndexedDb, Direction, Store}
-import com.viagraphs.idb.IdbSupport._
 import org.scalajs.dom.html.{Div, Span, TextArea}
+
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Promise, Future}
+import scala.concurrent.{Future, Promise}
 import scala.scalajs.js.UndefOr
 
 trait StashingChangeLog { this: EditorComponent =>
@@ -302,7 +303,7 @@ class EditorComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
               Continue
             case None => Continue
           }
-        }.asCompletedFuture.map(_.head)
+        }.asCompletedFuture.mapSuccessToContinue
 
       case RedoEvent =>
         if (stashSize > 0) {
@@ -310,14 +311,14 @@ class EditorComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
           import meter._
           nav.moveTo(Pointer.topLeft.v(lidx).>(lines.getLineTextUpTo(lidx, chidx)))
           val redone = op.execute(nav)
-          stashApply(redone).asCompletedFuture.map(_ => Continue)
+          stashApply(redone).asCompletedFuture.mapSuccessToContinue
         } else {
           Continue
         }
 
       case e: SideEffect =>
         Future(e.mutate(nav)).flatMap {
-          case Some(change) => commit(change).asCompletedFuture.map(_ => Continue)
+          case Some(change) => commit(change).asCompletedFuture.mapSuccessToContinue
           case None => Continue
         }
 

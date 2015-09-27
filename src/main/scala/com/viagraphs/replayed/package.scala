@@ -1,13 +1,31 @@
 package com.viagraphs
 
-import org.scalajs.dom.raw._
+import monifu.reactive.Ack
+import monifu.reactive.Ack.Continue
 import org.scalajs.dom.ext.PimpedHtmlCollection
 import org.scalajs.dom.html.{Div, Span}
+import org.scalajs.dom.raw._
+
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.util.{Failure, Success}
 
 package object replayed {
 
+  implicit class FutureExt[T](f: Future[T]) {
+    
+    def mapSuccessToContinue(implicit ec: ExecutionContext) = {
+      val p = Promise[Ack]()
+      f onComplete {
+        case Success(_) => p.success(Continue)
+        case Failure(ex) => p.failure(ex)
+      }
+      p.future
+    }
+    
+  }
+  
   implicit class RichNode(n: Node) {
 
     def removeAllChildren(): List[Node] = {

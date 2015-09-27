@@ -1,8 +1,8 @@
+import com.lihaoyi.workbench.Plugin._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbt.Keys._
 import sbt._
-import com.lihaoyi.workbench.Plugin._
 
 object Build extends sbt.Build {
 
@@ -26,7 +26,7 @@ object Build extends sbt.Build {
         libraryDependencies ++= Seq(
           "org.scala-js" %%% "scalajs-dom" % "0.8.1",
           "com.viagraphs" %%% "scalajs-keyboard-polyfill" % "0.0.4-SNAPSHOT",
-          "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.8-SNAPSHOT",
+          "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.7",
           "com.viagraphs" %%% "actuarius" % "0.3.0-SNAPSHOT",
           "org.monifu" %%% "monifu" % "1.0-RC3",
           "com.lihaoyi" %%% "scalatags" % "0.5.2",

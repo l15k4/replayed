@@ -283,8 +283,8 @@ class NavbarComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
           store.add(List(newDoc)).doOnComplete {
             render(newDoc, allDocs.unzip._2.toList, None)
           }
-        }.asCompletedFuture.map(_ => Continue)
-      }
+        }.asCompletedFuture
+      }.mapSuccessToContinue
     case OpenDoc(aDoc) =>
       createdIndex.get(createdIndex.allKeys(Direction.Next)).doWorkOnSuccess { allDocs =>
         val toBeListed =
@@ -292,13 +292,13 @@ class NavbarComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
             created != aDoc.created
           }.unzip._2.toList
         render(aDoc, toBeListed, None)
-      }.asCompletedFuture.map(_ => Continue)
+      }.asCompletedFuture.mapSuccessToContinue
     case StoreDoc(aDoc) =>
-      store.update(List(aDoc)).asCompletedFuture.map(_ => Continue)
+      store.update(List(aDoc)).asCompletedFuture.mapSuccessToContinue
     case DeleteDoc(aDoc) =>
       store.delete(List(aDoc.created)).doOnComplete {
         channel.pushNext(NewOrLast)
-      }.asCompletedFuture.map(_ => Continue)
+      }.asCompletedFuture.mapSuccessToContinue
     case NewOrLast =>
       createdIndex.get(createdIndex.lastKey()).doWorkOnSuccess { lastCol =>
         lastCol.headOption match {
@@ -307,7 +307,7 @@ class NavbarComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
           case None =>
             channel.pushNext(NewDoc(data = None))
         }
-      }.asCompletedFuture.map(_ => Continue)
+      }.asCompletedFuture.mapSuccessToContinue
     case _ => Continue
   }
 
