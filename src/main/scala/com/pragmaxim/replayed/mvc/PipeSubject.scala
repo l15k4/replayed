@@ -1,4 +1,4 @@
-package com.viagraphs.replayed.mvc
+package com.pragmaxim.replayed.mvc
 
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.{Cancel, Continue}

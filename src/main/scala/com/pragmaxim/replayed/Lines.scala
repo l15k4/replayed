@@ -1,4 +1,4 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
 import org.scalajs.dom.html.{Div, Span}
 import org.scalajs.dom.{Element, document}

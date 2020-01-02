@@ -1,9 +1,9 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
-import com.viagraphs.idb._
-import com.viagraphs.replayed.event._
-import com.viagraphs.replayed.mvc.{EditorComponent, ReplayDispatcher}
-import com.viagraphs.scalajs.dom.KCode
+import com.pragmaxim.idb._
+import com.pragmaxim.replayed.event._
+import com.pragmaxim.replayed.mvc.{EditorComponent, ReplayDispatcher}
+import com.pragmaxim.scalajs.dom.KCode
 import monifu.reactive.Ack.Continue
 import monifu.reactive.channels.ObservableChannel
 import monifu.reactive.{Ack, Observable}
@@ -17,7 +17,7 @@ import scala.scalajs.js.Dynamic.{literal => lit}
 import scala.util.control.NonFatal
 
 trait EditorHelper extends Spy {
-  import com.viagraphs.idb.IdbSupport._
+  import com.pragmaxim.idb.IdbSupport._
 
   import scala.language.implicitConversions
   implicit val scheduler = IndexedDb.scheduler

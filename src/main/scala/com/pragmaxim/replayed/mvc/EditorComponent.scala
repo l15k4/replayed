@@ -1,11 +1,11 @@
-package com.viagraphs.replayed.mvc
+package com.pragmaxim.replayed.mvc
 
-import com.viagraphs.idb.IdbSupport._
-import com.viagraphs.idb.{Direction, IndexedDb, Store}
-import com.viagraphs.replayed.event._
-import com.viagraphs.replayed.{Navigator, _}
-import com.viagraphs.scalajs.dom.KCode
-import com.viagraphs.scalajs.dom.KeyboardPolyfill.PfEvent
+import com.pragmaxim.idb.IdbSupport._
+import com.pragmaxim.idb.{Direction, IndexedDb, Store}
+import com.pragmaxim.replayed.event._
+import com.pragmaxim.replayed.{Navigator, _}
+import com.pragmaxim.scalajs.dom.KCode
+import com.pragmaxim.scalajs.dom.KeyboardPolyfill.PfEvent
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.Continue
 import monifu.reactive.channels.ObservableChannel
@@ -73,7 +73,7 @@ class EditorComponent(val channel: ObservableChannel[RxEvent, RxEvent], idb: Ind
   }
 
   def onSubscribe() = {
-    import com.viagraphs.replayed.RichHTMLElement
+    import com.pragmaxim.replayed.RichHTMLElement
     def relativeX(pageX: Double) = pageX - Lines.LinesLeft + ee.scrollLeft
     def relativeY(pageY: Double) = ((pageY - Lines.LinesTop) / Lines.LineHeight).toInt
 

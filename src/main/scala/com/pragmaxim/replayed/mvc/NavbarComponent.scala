@@ -1,10 +1,10 @@
-package com.viagraphs.replayed.mvc
+package com.pragmaxim.replayed.mvc
 
-import com.viagraphs.idb.IdbSupport._
-import com.viagraphs.idb.{Direction, IndexedDb, UpgradeDb}
-import com.viagraphs.replayed.IOUtils._
-import com.viagraphs.replayed.event._
-import com.viagraphs.replayed.{Document, _}
+import com.pragmaxim.idb.IdbSupport._
+import com.pragmaxim.idb.{Direction, IndexedDb, UpgradeDb}
+import com.pragmaxim.replayed.IOUtils._
+import com.pragmaxim.replayed.event._
+import com.pragmaxim.replayed.{Document, _}
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack
 import monifu.reactive.Ack.Continue

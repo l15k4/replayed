@@ -11,9 +11,9 @@ object Build extends sbt.Build {
       .enablePlugins(ScalaJSPlugin)
       .settings(workbenchSettings:_*)
       .settings(
-        organization := "com.viagraphs",
+        organization := "com.pragmaxim",
         name := "replayed",
-        version := "0.3-SNAPSHOT",
+        version := "0.3",
         scalaVersion := "2.11.7",
         resolvers += Resolver.mavenLocal,
         watchSources += baseDirectory.value / "index.html",
@@ -25,15 +25,15 @@ object Build extends sbt.Build {
         ),
         libraryDependencies ++= Seq(
           "org.scala-js" %%% "scalajs-dom" % "0.8.1",
-          "com.viagraphs" %%% "scalajs-keyboard-polyfill" % "0.0.4-SNAPSHOT",
-          "com.viagraphs" %%% "scalajs-rx-idb" % "0.0.8-SNAPSHOT",
-          "com.viagraphs" %%% "actuarius" % "0.3.0-SNAPSHOT",
-          "org.monifu" %%% "monifu" % "1.0-RC3",
+          "com.pragmaxim" %%% "scalajs-keyboard-polyfill" % "0.0.4",
+          "com.pragmaxim" %%% "scalajs-rx-idb" % "0.0.9",
+          "com.pragmaxim" %%% "actuarius" % "0.3.0-SNAPSHOT",
+          "org.monifu" %%% "monifu" % "1.0",
           "com.lihaoyi" %%% "scalatags" % "0.5.2",
           "com.lihaoyi" %%% "upickle" % "0.3.6",
           "com.lihaoyi" %%% "utest" % "0.3.1" % "test"
         ),
-        bootSnippet := "com.viagraphs.replayed.Replayed().main();",
+        bootSnippet := "com.pragmaxim.replayed.Replayed().main();",
         scalaJSStage := FastOptStage,
         testFrameworks += new TestFramework("utest.runner.Framework"),
         autoAPIMappings := true,

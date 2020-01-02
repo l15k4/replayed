@@ -1,6 +1,6 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
-import com.viagraphs.idb.IdbSupport
+import com.pragmaxim.idb.IdbSupport
 import upickle.Js
 import upickle.legacy._
 

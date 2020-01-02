@@ -1,4 +1,4 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
 import org.scalajs.dom._
 
@@ -51,7 +51,7 @@ object IOUtils {
   }
 
   def unmarshal(jsonOrText: String): Seq[Change] = {
-    import com.viagraphs.idb.IdbSupport._
+    import com.pragmaxim.idb.IdbSupport._
     Try(
       read[Seq[Change]](jsonOrText)
     ).getOrElse(

@@ -1,4 +1,4 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
 import utest._
 

@@ -1,9 +1,9 @@
-package com.viagraphs.replayed.mvc
+package com.pragmaxim.replayed.mvc
 
 import java.util.concurrent.TimeUnit
 
-import com.viagraphs.replayed.event.RxEvent
-import com.viagraphs.replayed.{RichHTMLElement, RichNode}
+import com.pragmaxim.replayed.event.RxEvent
+import com.pragmaxim.replayed.{RichHTMLElement, RichNode}
 import monifu.concurrent.Scheduler
 import monifu.reactive.Ack.{Cancel, Continue}
 import monifu.reactive.OverflowStrategy.Unbounded

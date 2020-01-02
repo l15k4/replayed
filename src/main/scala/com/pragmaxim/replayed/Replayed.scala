@@ -1,13 +1,13 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
-import com.viagraphs.idb._
-import com.viagraphs.replayed.event.{NewDoc, NewOrLast}
-import com.viagraphs.replayed.mvc.{ReplayDispatcher, EditorComponent, MarkdownComponent, NavbarComponent}
+import com.pragmaxim.idb._
+import com.pragmaxim.replayed.event.{NewDoc, NewOrLast}
+import com.pragmaxim.replayed.mvc.{ReplayDispatcher, EditorComponent, MarkdownComponent, NavbarComponent}
 import monifu.concurrent.Scheduler
 import scala.scalajs.js.Dynamic.{literal => lit}
 import scala.scalajs.js.JSApp
 import org.scalajs.dom.console
-import com.viagraphs.idb.IdbSupport._
+import com.pragmaxim.idb.IdbSupport._
 import upickle.legacy._
 import IOUtils._
 
@@ -28,7 +28,7 @@ object Replayed extends JSApp {
     implicit val scheduler = Scheduler.trampoline()
     val asyncScheduler = Scheduler()
 
-    val sampleDataFuture = readRemoteResource("http://viagraphs.github.io/replayed/README.json")
+    val sampleDataFuture = readRemoteResource("http://pragmaxim.github.io/replayed/README.json")
 
     val idb = IndexedDb(
       OpenDb(editorDbName,

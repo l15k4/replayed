@@ -1,7 +1,7 @@
-package com.viagraphs.replayed.event
+package com.pragmaxim.replayed.event
 
-import com.viagraphs.replayed._
-import com.viagraphs.scalajs.dom.KCode
+import com.pragmaxim.replayed._
+import com.pragmaxim.scalajs.dom.KCode
 import scala.collection.immutable.TreeMap
 
 trait SideEffect {

@@ -1,4 +1,4 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
 import monifu.concurrent.Scheduler
 import monifu.reactive.Observable

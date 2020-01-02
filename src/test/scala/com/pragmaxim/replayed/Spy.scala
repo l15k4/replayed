@@ -1,7 +1,7 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
-import com.viagraphs.replayed.event._
-import com.viagraphs.replayed.mvc.{EditorComponent, StashingChangeLog}
+import com.pragmaxim.replayed.event._
+import com.pragmaxim.replayed.mvc.{EditorComponent, StashingChangeLog}
 import monifu.reactive.Observable
 
 import scala.collection.mutable.ListBuffer

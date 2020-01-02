@@ -1,6 +1,6 @@
-package com.viagraphs.replayed.event
+package com.pragmaxim.replayed.event
 
-import com.viagraphs.replayed.{Document, Change}
+import com.pragmaxim.replayed.{Document, Change}
 
 import scala.scalajs.js
 

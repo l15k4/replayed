@@ -1,4 +1,4 @@
-package com.viagraphs
+package com.pragmaxim
 
 import monifu.reactive.Ack
 import monifu.reactive.Ack.Continue

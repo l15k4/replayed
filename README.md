@@ -1,6 +1,8 @@
-# [Replayed](http://viagraphs.github.io/replayed/index.html)
+# [Replayed](http://pragmaxim.github.io/replayed/index.html)
 
-[![Build Status](https://travis-ci.org/viagraphs/replayed.svg)](https://travis-ci.org/viagraphs/replayed)
+[![Build Status](https://travis-ci.org/pragmaxim/replayed.svg)](https://travis-ci.org/pragmaxim/replayed)
+
+**(Legacy software - does not build, not maintained anymore due to too many breaking changes in dependencies over past several years)**
 
 What it is now :
 
@@ -82,7 +84,7 @@ Development :
 
 ### Technologies
 
-- [Reactive IDB](https://github.com/viagraphs/scalajs-rx-idb)
+- [Reactive IDB](https://github.com/l15k4/scalajs-rx-idb)
   Rx based wrapper around IndexedDB I wrote
 - [Monifu](http://www.monifu.org)
   Reactive Programming for Scala and Scala.js
@@ -96,8 +98,3 @@ Development :
   tiny, portable testing library for Scala
 - [bootstrap](http://getbootstrap.com)
   actually something I shouldn't have used as a CSS newbie
-
-### License
-
-The MIT License (MIT)
-Copyright (c) 2015 by [viagraphs](https://github.com/viagraphs)

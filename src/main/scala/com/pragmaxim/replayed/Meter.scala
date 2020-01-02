@@ -1,6 +1,6 @@
-package com.viagraphs.replayed
+package com.pragmaxim.replayed
 
-import com.viagraphs.scalajs.dom.ChCode
+import com.pragmaxim.scalajs.dom.ChCode
 
 import scala.collection.mutable
 

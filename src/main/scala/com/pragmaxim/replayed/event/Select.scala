@@ -1,6 +1,6 @@
-package com.viagraphs.replayed.event
+package com.pragmaxim.replayed.event
 
-import com.viagraphs.replayed._
+import com.pragmaxim.replayed._
 import org.scalajs.dom.{Element, Range}
 
 case object SelectAll extends EditorEvent

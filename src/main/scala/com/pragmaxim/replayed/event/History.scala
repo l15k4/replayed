@@ -1,6 +1,6 @@
-package com.viagraphs.replayed.event
+package com.pragmaxim.replayed.event
 
-import com.viagraphs.scalajs.dom.KCode
+import com.pragmaxim.scalajs.dom.KCode
 
 case object UndoEvent extends EditorEvent {
   val keyCode = KCode.Z
